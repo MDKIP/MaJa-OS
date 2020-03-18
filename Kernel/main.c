@@ -1,9 +1,14 @@
+#include "../Drivers/screen.h"
+
 void dte()
 {
     
 }
 void main()
 {
-    char* vidmem = (char*)0xb8000;
-    *vidmem = 'X';
+    // inicjalizacja
+    screen_init();
+
+    // powitanie
+    kprint("Hello in MaJa OS!");
 }
