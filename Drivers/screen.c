@@ -1,4 +1,5 @@
 #include<stdint.h>
+#include<stdbool.h>
 
 char* VGA_MEMORY;
 int VGA_WIDTH;
@@ -54,6 +55,34 @@ void kprint(char* str)
         *(VGA_MEMORY+offset+2*c) = *(str+c);
         *(VGA_MEMORY+offset+2*c+1) = vga_color;
         c++;
+        vga_column++;
+    }
+}
+void kprint_int(int a)
+{
+    int digits[10];
+    int i;
+    for (i = 9; i >= 0; i--)
+    {
+        digits[i] = a % 10;
+        a /= 10;
+    }
+    bool foundStart = false;
+    for (i = 0; i < 10; i++)
+    {
+        if (digits[i] == 0 && !foundStart)
+        {
+            continue;
+        }
+        else if (digits[i] != 0 && !foundStart)
+        {
+            foundStart = true;
+        }
+        if (foundStart)
+        {
+            kprintch(digits[i] + 48, vga_column, vga_row);
+            vga_column += 1;
+        }
     }
 }
 void vga_set_point(int x, int y)
