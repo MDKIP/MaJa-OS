@@ -45,6 +45,22 @@ int calc_vga_offset(int x, int y)
     // ponieważ pamięć VRAM jest 80x25 a każdy znak zajmuje 2 bajty
     return 2 * (y * VGA_WIDTH + x);
 }
+
+void vga_clear()
+{
+    int c = 0;
+    int offset = 0;
+    while (80 * 25 > c)
+    {
+        *(VGA_MEMORY+offset) = 0;
+        *(VGA_MEMORY+offset + 1) = vga_color;
+        c++;
+        offset = c * 2;
+    }
+    vga_column = 0;
+    vga_row = 0;
+}
+
 void kprint(char* str)
 {
     // petla wypisująca na ekran ciąg stringa
@@ -52,10 +68,25 @@ void kprint(char* str)
     int offset = calc_vga_offset(vga_column, vga_row);
     while (*(str+c) != 0)
     {
-        *(VGA_MEMORY+offset+2*c) = *(str+c);
-        *(VGA_MEMORY+offset+2*c+1) = vga_color;
+        if(vga_row >= VGA_HEIGHT - 3)
+        {
+            vga_row = 0;
+            vga_column = 0;
+            offset = calc_vga_offset(vga_column, vga_row);
+        }
+        if(*(str+c) == '\n')
+        {
+            vga_column = 0;
+            vga_row++;
+            offset = calc_vga_offset(vga_column, vga_row);
+            c++;
+            continue;
+        }
+        *(VGA_MEMORY+offset) = *(str+c);
+        *(VGA_MEMORY+offset + 1) = vga_color;
         c++;
         vga_column++;
+        offset = calc_vga_offset(vga_column, vga_row);
     }
 }
 void kprint_int(int a)
