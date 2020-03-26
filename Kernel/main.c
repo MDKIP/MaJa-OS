@@ -10,7 +10,5 @@ void main()
     screen_init();
 
     // powitanie
-    kprint("Hello MaJaOZ!\nHow are You?");
-    vga_clear();
-    kprint("Hello MaJaOS!\nHow are You?");
+    kprint("Hello MaJaOS!");
 }
