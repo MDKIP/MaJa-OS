@@ -40,7 +40,7 @@ void abc()
         {
             int offset = calc_vga_offset(X, Y + 1);
             char C = *(VGA_MEMORY + offset);
-            kprintch(C + offset), X, Y);
+            kprintch(C, X, Y);
         }
     }
     vga_row -= 1;
