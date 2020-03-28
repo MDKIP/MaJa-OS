@@ -74,6 +74,12 @@ void kprint(char* str)
 }
 void kprint_int(int a)
 {
+    if (a == 0)
+    {
+        kprintch('0', vga_column, vga_row);
+        vga_column += 1;
+        return;
+    }
     int digits[10];
     int i;
     for (i = 9; i >= 0; i--)

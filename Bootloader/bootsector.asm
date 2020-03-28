@@ -12,7 +12,7 @@ call real_printl
 mov bx, MSG_DISKLOAD
 call real_printl
 mov bx, KERNEL
-mov dh, 2
+mov dh, 10
 call real_disk_load
 mov bx, MSG_DISKLOAD_SUCCESS
 call real_printl
