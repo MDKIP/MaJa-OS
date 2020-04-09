@@ -1,5 +1,6 @@
 #include<stdint.h>
 #include<stdbool.h>
+#include "ports.h"
 #include "screen.h"
 
 char* VGA_MEMORY;
@@ -7,6 +8,8 @@ int VGA_WIDTH;
 int VGA_HEIGHT;
 int vga_column;
 int vga_row;
+int vga_cursor_column;
+int vga_cursor_row;
 uint8_t vga_color;
 
 
@@ -21,6 +24,9 @@ void screen_init(void)
     VGA_HEIGHT = 25;
     vga_column = 0;
     vga_row = 0;
+    int cursor_pos = vga_get_cursor_pos();
+    vga_cursor_column = cursor_pos / VGA_WIDTH;
+    vga_cursor_row = cursor_pos % VGA_WIDTH;
     vga_color = vga_get_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
 }
 int calc_vga_offset(int x, int y)
@@ -63,6 +69,7 @@ void kprint(char* str)
             vga_row++;
             offset = calc_vga_offset(vga_column, vga_row);
             c++;
+            vga_cursor_row++;
             continue;
         }
         *(VGA_MEMORY+offset) = *(str+c);
@@ -71,6 +78,8 @@ void kprint(char* str)
         vga_column++;
         offset = calc_vga_offset(vga_column, vga_row);
     }
+    vga_cursor_row++;
+    vga_update_cursor();
 }
 void kprint_int(int a)
 {
@@ -104,6 +113,23 @@ void kprint_int(int a)
             vga_column += 1;
         }
     }
+}
+int vga_get_cursor_pos()
+{
+    send_port_byte(0x3d4, 14);
+    int position = get_port_byte(0x3d5) << 8;
+    send_port_byte(0x3d4, 15);
+    position += get_port_byte(0x3d5);
+    return position;
+}
+void vga_update_cursor()
+{
+    uint16_t cursor_pos = vga_cursor_row * VGA_WIDTH + vga_cursor_column;
+
+    send_port_byte(0x3D4, 0x0F);
+    send_port_byte(0X3D5, (uint8_t)(cursor_pos & 0xFF));
+    send_port_byte(0x3D4, 0x0E);
+    send_port_byte(0X3D5, (uint8_t)((cursor_pos >> 8) & 0xFF));
 }
 void vga_set_point(int x, int y)
 {

@@ -6,6 +6,8 @@ extern int VGA_WIDTH;
 extern int VGA_HEIGHT;
 extern int vga_column;
 extern int vga_row;
+extern int vga_cursor_column;
+extern int vga_cursor_row;
 extern uint8_t vga_color;
 enum VGA_COLOR
 {
@@ -32,6 +34,8 @@ void kprint(char* str);
 void kprint_int(int a);
 void vga_clear();
 void vga_set_point(int x, int y);
+int vga_get_cursor_pos();
+void vga_update_cursor();
 uint8_t vga_get_color(enum VGA_COLOR foreground, enum VGA_COLOR background);
 int calc_vga_offset(int x, int y);
 void kprintch(char c, int x, int y);
