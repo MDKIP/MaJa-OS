@@ -35,6 +35,23 @@ int calc_vga_offset(int x, int y)
     return 2 * (y * VGA_WIDTH + x);
 }
 
+void abc()
+{
+    int X = 0;
+    int Y = 0;
+    int yMax = vga_row;
+    for (Y = 0; Y <= yMax; Y++)
+    {
+        for(X = 0; X < 80; X++)
+        {
+            int offset = calc_vga_offset(X, Y + 1);
+            char C = *(VGA_MEMORY + offset);
+            kprintch(C, X, Y);
+        }
+    }
+    vga_row -= 1;
+}
+
 void vga_clear()
 {
     int c = 0;
@@ -59,8 +76,8 @@ void kprint(char* str)
     {
         if(vga_row >= VGA_HEIGHT - 3)
         {
-            vga_row = 0;
-            vga_column = 0;
+            abc();
+            vga_clear();
             offset = calc_vga_offset(vga_column, vga_row);
         }
         if(*(str+c) == '\n')
@@ -81,6 +98,7 @@ void kprint(char* str)
     vga_cursor_row++;
     vga_update_cursor();
 }
+
 void kprint_int(int a)
 {
     if (a == 0)

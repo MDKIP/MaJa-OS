@@ -12,5 +12,6 @@ void main()
     screen_init();
 
     // powitanie
+    
     kprint("Hello in MaJaOS!");
 }
