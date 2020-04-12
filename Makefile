@@ -15,7 +15,9 @@ kernelcode:
 	i686-elf-gcc -ffreestanding -c Kernel/main.c -o bin/main.o
 	i686-elf-gcc -ffreestanding -c Drivers/screen.c -o bin/drivers_screen.o
 	i686-elf-gcc -ffreestanding -c Drivers/ports.c -o bin/drivers_ports.o
-	i686-elf-ld -o bin/kernel.bin -Ttext 0x1000 bin/kernel_entry.o bin/main.o bin/drivers_screen.o bin/drivers_ports.o --oformat binary
+	nasm -f elf Memory/gdt.asm -o bin/gdt_asm.o 
+	i686-elf-gcc -ffreestanding -c Memory/gdt.c -o bin/gdt.o
+	i686-elf-ld -o bin/kernel.bin -Ttext 0x1000 bin/kernel_entry.o bin/main.o bin/drivers_screen.o bin/drivers_ports.o bin/gdt_asm.o bin/gdt.o --oformat binary
 
 bootcode:
 	nasm -f bin Bootloader/bootsector.asm -o bin/bootloader.bin
