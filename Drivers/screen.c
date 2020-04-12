@@ -24,9 +24,9 @@ void screen_init(void)
     VGA_HEIGHT = 25;
     vga_column = 0;
     vga_row = 0;
-    int cursor_pos = vga_get_cursor_pos();
-    vga_cursor_column = cursor_pos / VGA_WIDTH;
-    vga_cursor_row = cursor_pos % VGA_WIDTH;
+    vga_cursor_column = 0;
+    vga_cursor_row = 1;
+    vga_update_cursor();
     vga_color = vga_get_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
 }
 int calc_vga_offset(int x, int y)
@@ -95,7 +95,6 @@ void kprint(char* str)
         vga_column++;
         offset = calc_vga_offset(vga_column, vga_row);
     }
-    vga_cursor_row++;
     vga_update_cursor();
 }
 
